@@ -6,6 +6,8 @@ public class ParseLine {
     ArrayList<String> symbols = new ArrayList<>();
 
     public ParseLine(String line) {
+        line = line.replaceAll("\\s+", "");
+
         for (int i = 0; i < line.length(); i++) {
             String symbol = String.valueOf(line.charAt(i));
 
