@@ -1,3 +1,5 @@
+package com.td.calc;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -6,7 +8,7 @@ public class ParseLine {
     ArrayList<String> symbols = new ArrayList<>();
 
     public ParseLine(String line) {
-        line = line.replaceAll("\\s+", "");
+        line = prepareLine(line);
 
         for (int i = 0; i < line.length(); i++) {
             String symbol = String.valueOf(line.charAt(i));
@@ -49,7 +51,7 @@ public class ParseLine {
                     checkOperators(symbol);
                 }
             } else {
-                System.out.println("Некорректный символ. Ошибка: " + symbol);
+                System.out.println("Incorrect character. Mistake: " + symbol);
                 System.exit(0);
             }
         }
@@ -81,6 +83,11 @@ public class ParseLine {
             }
             stack.push(symbol);
         }
+    }
+
+    private String prepareLine(String line) {
+        line = line.replaceAll("\\s+", "").replace("=", "");
+        return line;
     }
 
     public ArrayList<String> getSymbols() {

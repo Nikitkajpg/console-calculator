@@ -1,19 +1,17 @@
-import java.util.Scanner;
+package com.td.calc;
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Введите выражение:");
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
+public class Checker {
+    public static void checkLine(String line) {
+        checkEmptyLine(line);
         checkBrackets(line);
         checkPoints(line);
+    }
 
-        ParseLine parseLine = new ParseLine(line);
-        Calculator calculator = new Calculator(parseLine.getSymbols());
-
-        System.out.println("Выражение в форме ОПЗ: " + parseLine.getSymbols());
-        System.out.println("Результат: " + calculator.printResult());
-
+    private static void checkEmptyLine(String line) {
+        if (line.equals("")) {
+            System.out.println("Line is empty");
+            System.exit(0);
+        }
     }
 
     private static void checkBrackets(String line) {
@@ -26,7 +24,7 @@ public class Main {
             }
         }
         if (open != close) {
-            System.out.println("Скобки не согласованы.");
+            System.out.println("The brackets are not consistent");
             System.exit(0);
         }
     }
@@ -35,11 +33,11 @@ public class Main {
         for (int i = 0; i < line.length(); i++) {
             if (String.valueOf(line.charAt(i)).equals(".")) {
                 if (i == 0 || i == line.length() - 1) {
-                    System.out.println("Неверная запись дробных чисел.");
+                    System.out.println("Incorrect input of fractional numbers");
                     System.exit(0);
                 } else {
                     if (!Utils.isNumber(String.valueOf(line.charAt(i - 1))) || !Utils.isNumber(String.valueOf(line.charAt(i + 1)))) {
-                        System.out.println("Неверная запись дробных чисел.");
+                        System.out.println("Incorrect input of fractional numbers");
                         System.exit(0);
                     }
                 }
