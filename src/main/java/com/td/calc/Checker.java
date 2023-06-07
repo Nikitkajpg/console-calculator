@@ -1,20 +1,13 @@
 package com.td.calc;
 
 public class Checker {
-    public static void checkLine(String line) {
-        checkEmptyLine(line);
-        checkBrackets(line);
-        checkPoints(line);
+    public static boolean hasError(String line) {
+        return !line.matches(
+                "(\\(*-?[()]*-?\\d+[()]*-?(\\.\\d+[()]*-?)?([-+*/^])?)+[()]*-?[()]*-?\\d+(\\.\\d+)?\\)*")
+                || line.matches("\\d*") || checkBracketsNumber(line);
     }
 
-    private static void checkEmptyLine(String line) {
-        if (line.equals("")) {
-            System.out.println("Line is empty");
-            System.exit(0);
-        }
-    }
-
-    private static void checkBrackets(String line) {
+    private static boolean checkBracketsNumber(String line) {
         int open = 0, close = 0;
         for (int i = 0; i < line.length(); i++) {
             if (String.valueOf(line.charAt(i)).equals("(")) {
@@ -25,23 +18,30 @@ public class Checker {
         }
         if (open != close) {
             System.out.println("The brackets are not consistent");
-            System.exit(0);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    private static void checkPoints(String line) {
-        for (int i = 0; i < line.length(); i++) {
-            if (String.valueOf(line.charAt(i)).equals(".")) {
-                if (i == 0 || i == line.length() - 1) {
-                    System.out.println("Incorrect input of fractional numbers");
-                    System.exit(0);
-                } else {
-                    if (!Utils.isNumber(String.valueOf(line.charAt(i - 1))) || !Utils.isNumber(String.valueOf(line.charAt(i + 1)))) {
-                        System.out.println("Incorrect input of fractional numbers");
-                        System.exit(0);
+    public static String checkNegativeNumbers(String line) {
+        StringBuilder sb = new StringBuilder(line);
+        for (int i = 0; i < sb.length(); i++) {
+            String symbol = String.valueOf(sb.charAt(i));
+
+            if (Utils.isMinus(symbol)) {
+                String nextSymbol = String.valueOf(sb.charAt(i + 1));
+                if (i == 0 && (Utils.isDigit(nextSymbol) || Utils.isDelimiter(nextSymbol, false))) {
+                    sb.setCharAt(i, '~');
+                } else if (i != 0) {
+                    String prevSymbol = String.valueOf(sb.charAt(i - 1));
+                    if ((Utils.isDigit(nextSymbol) && (Utils.isOperator(prevSymbol) || Utils.isOpenBracket(prevSymbol))) ||
+                            (Utils.isDelimiter(nextSymbol, false) && Utils.isOperatorOrDelimiter(prevSymbol, false))) {
+                        sb.setCharAt(i, '~');
                     }
                 }
             }
         }
+        return sb.toString();
     }
 }
